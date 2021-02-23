@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SalesInvoiceToAccountingImport": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
