@@ -4,10 +4,10 @@
     {
         public bool IsOk { get; }
         public T? Value { get; }
-        public string? Error { get; }
+        public string Error { get; }
 
 
-        private Result(bool isOk, T? value, string? error)
+        private Result(bool isOk, T? value, string error)
         {
             IsOk = isOk;
             Value = value;
@@ -16,7 +16,7 @@
 
         public static Result<T> Ok(T value)
         {
-            return new(true, value, null);
+            return new(true, value, string.Empty);
         }
 
         public static Result<T> Failure(string error)

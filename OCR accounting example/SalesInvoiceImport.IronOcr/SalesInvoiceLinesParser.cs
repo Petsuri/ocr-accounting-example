@@ -93,11 +93,11 @@ namespace SalesInvoiceImport.IronOcr
             var reversedOrder = line.Words.Reverse().ToList();
             var productWords = reversedOrder.Skip(ToProductName).Reverse();
             return new SalesInvoiceLine(
-                string.Join(" ", productWords),
+                new(string.Join(" ", productWords)),
                 int.Parse(reversedOrder[AmountIndex].Text),
-                new ProductUnit(reversedOrder[UnitIndex].Text),
+                new(reversedOrder[UnitIndex].Text),
                 ToDecimal(reversedOrder[ExcludingVatPriceIndex]),
-                new FinnishVatPercentage(int.Parse(reversedOrder[VatIndex].Text))
+                new(int.Parse(reversedOrder[VatIndex].Text))
             );
         }
 

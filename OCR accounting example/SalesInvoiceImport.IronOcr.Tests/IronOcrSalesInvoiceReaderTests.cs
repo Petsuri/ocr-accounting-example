@@ -97,9 +97,9 @@ namespace SalesInvoiceImport.IronOcr.Tests
             var emptyPdf = File.ReadAllBytes(TestContext.CurrentContext.TestDirectory + "/TestPdfs/sales-invoice-with-1-lines.pdf");
             var sut = new IronOcrSalesInvoiceReaderBuilder().Build();
 
-            var actual = (await sut.ReadPdf(emptyPdf)).Value?.Lines.Single();
+            var actual = (await sut.ReadPdf(emptyPdf)).Value.Lines.Single();
 
-            Assert.AreEqual("Consulting", actual.ProductName);
+            Assert.AreEqual("Consulting", actual.Name.Value);
             Assert.AreEqual(1, actual.Amount);
             Assert.AreEqual("pcs", actual.Unit.Value);
             Assert.AreEqual(10000m, actual.UnitNetPrice);
@@ -112,14 +112,13 @@ namespace SalesInvoiceImport.IronOcr.Tests
             var emptyPdf = File.ReadAllBytes(TestContext.CurrentContext.TestDirectory + "/TestPdfs/sales-invoice-with-4-lines.pdf");
             var sut = new IronOcrSalesInvoiceReaderBuilder().Build();
 
-            var actual = (await sut.ReadPdf(emptyPdf)).Value?.Lines;
+            var actual = (await sut.ReadPdf(emptyPdf)).Value.Lines.First();
 
-            var firstLine = actual.First();
-            Assert.AreEqual("Product1", firstLine.ProductName);
-            Assert.AreEqual(1, firstLine.Amount);
-            Assert.AreEqual("pcs", firstLine.Unit.Value);
-            Assert.AreEqual(100m, firstLine.UnitNetPrice);
-            Assert.AreEqual(24, firstLine.VatPercentage.Value);
+            Assert.AreEqual("Product1", actual.Name.Value);
+            Assert.AreEqual(1, actual.Amount);
+            Assert.AreEqual("pcs", actual.Unit.Value);
+            Assert.AreEqual(100m, actual.UnitNetPrice);
+            Assert.AreEqual(24, actual.VatPercentage.Value);
         }
 
         [Test]
@@ -128,14 +127,13 @@ namespace SalesInvoiceImport.IronOcr.Tests
             var emptyPdf = File.ReadAllBytes(TestContext.CurrentContext.TestDirectory + "/TestPdfs/sales-invoice-with-4-lines.pdf");
             var sut = new IronOcrSalesInvoiceReaderBuilder().Build();
 
-            var actual = (await sut.ReadPdf(emptyPdf)).Value?.Lines;
+            var actual = (await sut.ReadPdf(emptyPdf)).Value?.Lines.Last();
 
-            var lastLine = actual.Last();
-            Assert.AreEqual("Product4", lastLine.ProductName);
-            Assert.AreEqual(1, lastLine.Amount);
-            Assert.AreEqual("pcs", lastLine.Unit.Value);
-            Assert.AreEqual(5567m, lastLine.UnitNetPrice);
-            Assert.AreEqual(0, lastLine.VatPercentage.Value);
+            Assert.AreEqual("Product4", actual.Name.Value);
+            Assert.AreEqual(1, actual.Amount);
+            Assert.AreEqual("pcs", actual.Unit.Value);
+            Assert.AreEqual(5567m, actual.UnitNetPrice);
+            Assert.AreEqual(0, actual.VatPercentage.Value);
         }
     }
 }

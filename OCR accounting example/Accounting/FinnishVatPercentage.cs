@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Accounting
 {
-    public sealed class FinnishVatPercentage
+    public sealed record FinnishVatPercentage
     {
         private static readonly IReadOnlyList<int> FinnishVatPercentages = new List<int>()
         {
@@ -12,6 +12,8 @@ namespace Accounting
         };
 
         public int Value { get; }
+
+        public decimal GetMultiplier() => 1 + Value / 100m;
 
         public FinnishVatPercentage(int value)
         {

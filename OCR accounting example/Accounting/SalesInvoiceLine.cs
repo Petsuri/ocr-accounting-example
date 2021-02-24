@@ -2,15 +2,15 @@
 {
     public sealed class SalesInvoiceLine
     {
-        public string ProductName { get; }
+        public ProductName Name { get; }
         public int Amount { get; }
         public ProductUnit Unit { get; }
         public decimal UnitNetPrice { get; }
         public FinnishVatPercentage VatPercentage { get; }
 
-        public SalesInvoiceLine(string productName, int amount, ProductUnit unit, decimal unitNetPrice, FinnishVatPercentage vatPercentage)
+        public SalesInvoiceLine(ProductName name, int amount, ProductUnit unit, decimal unitNetPrice, FinnishVatPercentage vatPercentage)
         {
-            ProductName = productName;
+            Name = name;
             Amount = amount;
             Unit = unit;
             UnitNetPrice = unitNetPrice;
