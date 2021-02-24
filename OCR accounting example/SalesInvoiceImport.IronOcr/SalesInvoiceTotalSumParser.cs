@@ -15,7 +15,7 @@ namespace SalesInvoiceImport.IronOcr
 
         private readonly IEnumerable<OcrResult.Line> lines;
 
-        public SalesInvoiceTotalSumParser(IEnumerable<OcrResult.Line> lines)
+        internal SalesInvoiceTotalSumParser(IEnumerable<OcrResult.Line> lines)
         {
             this.lines = lines;
         }
