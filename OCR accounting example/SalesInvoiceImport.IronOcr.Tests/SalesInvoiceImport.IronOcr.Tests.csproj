@@ -23,10 +23,10 @@
     <None Update="TestPdfs\empty.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestPdfs\example-sales-invoice1.pdf">
+    <None Update="TestPdfs\sales-invoice-with-4-lines.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestPdfs\example-sales-invoice2.pdf">
+    <None Update="TestPdfs\sales-invoice-with-1-lines.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
