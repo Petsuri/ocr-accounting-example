@@ -1,17 +1,14 @@
 ﻿using Accounting;
 using IronOcr;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace SalesInvoiceImport.IronOcr
 {
-    public class IronOcrSalesInvoiceReader : ISalesInvoiceReader
+    public sealed class IronOcrSalesInvoiceReader : ISalesInvoiceReader
     {
-        private static readonly IReadOnlyList<string> ProductUnits = new List<string>()
-        {
-            "pcs"
-        };
 
         private const int VatIndex = 0;
         private const int ExcludingVatPriceIndex = 1;
@@ -27,25 +24,39 @@ namespace SalesInvoiceImport.IronOcr
             this.ocr = ocr;
         }
 
-        public async Task<IReadOnlyList<SalesInvoiceLine>> ReadLines(byte[] pdf)
+        public async Task<Result<SalesInvoice>> ReadPdf(byte[] pdf)
         {
-            var result = await ReadPdf(pdf);
-            var productLines = result.Lines
-                .Where(IsProductLine)
-                .Select(ToProductLine)
-                .ToList();
+            if (!pdf.Any())
+            {
+                return Result<SalesInvoice>.Failure("Empty byte array is not valid PDF file");
+            }
 
-            return new List<SalesInvoiceLine>();
+            var result = await OcrPdf(pdf);
+            if (!result.IsOk)
+            {
+                return Result<SalesInvoice>.Failure(result.Error);
+            }
+
+            return ToSalesInvoice(result.Value.Lines);
         }
 
-        private async Task<OcrResult> ReadPdf(byte[] pdf)
+        private async Task<Result<OcrResult>> OcrPdf(byte[] pdf)
         {
-            using (var input = new OcrInput())
+            try
             {
-                input.AddPdf(pdf);
-                input.DeNoise();
-                return await ocr.ReadAsync(input);
+                using (var input = new OcrInput())
+                {
+                    input.AddPdf(pdf);
+                    input.DeNoise();
+                    var ocrResult = await ocr.ReadAsync(input);
+
+                    return Result<OcrResult>.Ok(ocrResult);
+                }
+            } catch(Exception ex)
+            {
+                return Result<OcrResult>.Failure(ex.ToString());
             }
+
         }
 
 
@@ -75,7 +86,7 @@ namespace SalesInvoiceImport.IronOcr
                 return false;
             }
 
-            return ProductUnits.Contains(words[UnitIndex].Text);
+            return ProductUnit.IsValid(words[UnitIndex].Text);
         }
 
         private static bool ContainsFinnishVatPercentage(IReadOnlyList<OcrResult.Word> words)
@@ -114,6 +125,21 @@ namespace SalesInvoiceImport.IronOcr
             return true;
         }
 
+        private static Result<SalesInvoice> ToSalesInvoice(OcrResult.Line[] lines)
+        {
+            var productLines = lines
+                .Where(IsProductLine)
+                .Select(ToProductLine)
+                .ToList();
+            if (!productLines.Any())
+            {
+                return Result<SalesInvoice>.Failure("Sales invoice information can't be found from PDF. Please check that this is a valid sales invoice.");
+
+            }
+
+            return Result<SalesInvoice>.Ok(new SalesInvoice());
+        }
+
         private static SalesInvoiceLine ToProductLine(OcrResult.Line line)
         {
             const int ToProductName = 5;
@@ -123,7 +149,7 @@ namespace SalesInvoiceImport.IronOcr
             return new SalesInvoiceLine(
                 string.Join(" ", productWords),
                 int.Parse(reversedOrder[AmountIndex].Text),
-                reversedOrder[UnitIndex].Text,
+                new ProductUnit(reversedOrder[UnitIndex].Text),
                 decimal.Parse(reversedOrder[UnitPriceIndex].Text),
                 new FinnishVatPercentage(int.Parse(reversedOrder[VatIndex].Text))
             );

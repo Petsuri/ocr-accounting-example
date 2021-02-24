@@ -1,6 +1,6 @@
 ﻿namespace Accounting
 {
-    public sealed class AccountingData
+    public sealed class SalesInvoice
     {
     }
 }
