@@ -40,8 +40,8 @@ namespace Accouting.Tests
 
             var expected = new List<AccountingEntryLine>()
             {
-                new Debit(new(1700), new("Counter transaction"), 124m, null),
-                new Credit(new(3000), new("petri.works"), 100m, new(24))
+                new Debit(new(1700), new("Counter transaction"), 124m, null, VatType.Undefined),
+                new Credit(new(3000), new("petri.works"), 100m, new(24), VatType.Sale)
             };
             format.Received(1).Format(Arg.Is<AccountingEntry>(value =>
                 value.GetLines().SequenceEqual(expected)

@@ -30,7 +30,7 @@ namespace Accounting
 
         private static AccountingEntry ToAccounting(SalesInvoice invoice)
         {
-            var debit = new Debit(new(1700), new ProductName("Counter transaction"), invoice.InvoiceTotal, null);
+            var debit = new Debit(new(1700), new ProductName("Counter transaction"), invoice.InvoiceTotal, null, VatType.Undefined);
             List<AccountingEntryLine> accountingLines = invoice.Lines
                 .Select(ToCredit)
                 .ToList();
@@ -41,7 +41,7 @@ namespace Accounting
 
         private static AccountingEntryLine ToCredit(SalesInvoiceLine line)
         {
-            return new Credit(new(3000), line.Name, line.Amount * line.UnitNetPrice, line.VatPercentage);
+            return new Credit(new(3000), line.Name, line.Amount * line.UnitNetPrice, line.VatPercentage, VatType.Sale);
         }
     }
 }

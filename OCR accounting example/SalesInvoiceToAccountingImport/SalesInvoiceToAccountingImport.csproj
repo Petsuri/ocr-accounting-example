@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AccountingEntryImport.CsvHelper\AccountingEntryImport.CsvHelper.csproj" />
     <ProjectReference Include="..\Accounting\Accounting.csproj" />
     <ProjectReference Include="..\SalesInvoiceImport.IronOcr\SalesInvoiceImport.IronOcr.csproj" />
   </ItemGroup>

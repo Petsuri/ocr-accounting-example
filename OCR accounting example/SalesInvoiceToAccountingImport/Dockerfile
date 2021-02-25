@@ -8,6 +8,7 @@ WORKDIR /src
 COPY ["SalesInvoiceToAccountingImport/SalesInvoiceToAccountingImport.csproj", "SalesInvoiceToAccountingImport/"]
 COPY ["Accounting/Accounting.csproj", "Accounting/"]
 COPY ["SalesInvoiceImport.IronOcr/SalesInvoiceImport.IronOcr.csproj", "SalesInvoiceImport.IronOcr/"]
+COPY ["AccountingEntryImport.CsvHelper/AccountingEntryImport.CsvHelper.csproj", "AccountingEntryImport.CsvHelper/"]
 RUN dotnet restore "SalesInvoiceToAccountingImport/SalesInvoiceToAccountingImport.csproj"
 COPY . .
 WORKDIR "/src/SalesInvoiceToAccountingImport"
