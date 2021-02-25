@@ -59,16 +59,19 @@ namespace AccountingEntryImport.CsvHelper
 
         private static CsvConfiguration GetConfiguration()
         {
-            var finnishCulture = new CultureInfo("fi-FI");
-            finnishCulture.NumberFormat = new()
+            var finnishCulture = new CultureInfo("fi-FI")
             {
-                NegativeSign = "-",
-                NumberDecimalSeparator = ",",
+                NumberFormat = new()
+                {
+                    NegativeSign = "-",
+                    NumberDecimalSeparator = ",",
+                    NumberDecimalDigits = 2,
+                }
             };
             return new CsvConfiguration(finnishCulture)
             {
                 Delimiter = ";",
-                Encoding = Encoding.UTF8, 
+                Encoding = Encoding.UTF8,
             };
         }
     }

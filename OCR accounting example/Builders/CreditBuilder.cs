@@ -28,9 +28,17 @@ namespace Builders
             return this;
         }
 
-        public CreditBuilder WithVat(int value)
+        public CreditBuilder WithVat(int? value)
         {
-            vat = new(value);
+            if (value.HasValue)
+            {
+                vat = new(value.Value);
+            }
+            else
+            {
+                vat = null;
+            }
+
             return this;
         }
 
