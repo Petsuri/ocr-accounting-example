@@ -38,21 +38,38 @@ namespace Accouting.Tests
 
             var actual = await sut.ToImportFormat(Array.Empty<byte>());
 
-            var expectedDebit = new Debit(new(1700), new("Counter transaction"), 124m, null);
-            var expectedCredit = new Credit(new(3000), new("petri.works"), 100m, new(24));
             var expected = new List<AccountingEntryLine>()
             {
                 new Debit(new(1700), new("Counter transaction"), 124m, null),
-                
+                new Credit(new(3000), new("petri.works"), 100m, new(24))
             };
             format.Received(1).Format(Arg.Is<AccountingEntry>(value =>
-                CreditsEquals(value.GetLines().Last(), expectedCredit)
+                value.GetLines().SequenceEqual(expected)
             ));
         }
 
-        private bool CreditsEquals(AccountingEntryLine first, AccountingEntryLine second)
+        [Test]
+        public async Task Importing_WithGivenPdfFile_CallsReaderCorrectly()
         {
-            return first.Equals(second);
+            var expected = new byte[] { 0, 16, 104, 213 };
+            var reader = new SalesInvoiceReaderStubBuilder().Build();
+            var sut = new SalesInvoicePdfServiceBuilder().WithReader(reader).Build();
+
+            await sut.ToImportFormat(expected);
+
+            await reader.Received(1).ReadPdf(expected);
+        }
+
+        [Test]
+        public async Task Importing_WithFormatter_ReturnsFormattedAccountingEntry()
+        {
+            var format = new AccountingEntryFormatStubBuilder().WithFormat("formatted").Build();
+            var sut = new SalesInvoicePdfServiceBuilder().WithFormat(format).Build();
+
+            var actual = await sut.ToImportFormat(Array.Empty<byte>());
+
+            Assert.IsTrue(actual.IsOk);
+            Assert.AreEqual("formatted", actual.Value);
         }
     }
 }
