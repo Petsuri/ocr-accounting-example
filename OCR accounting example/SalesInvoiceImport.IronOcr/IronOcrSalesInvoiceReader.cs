@@ -10,10 +10,12 @@ namespace SalesInvoiceImport.IronOcr
     {
 
         private readonly IronTesseract ocr;
+        private readonly IInvoiceTotalSum invoiceTotal;
 
-        public IronOcrSalesInvoiceReader(IronTesseract ocr)
+        public IronOcrSalesInvoiceReader(IronTesseract ocr, IInvoiceTotalSum invoiceTotal)
         {
             this.ocr = ocr;
+            this.invoiceTotal = invoiceTotal;
         }
 
         public async Task<Result<SalesInvoice>> ReadPdf(byte[] pdf)
@@ -51,12 +53,11 @@ namespace SalesInvoiceImport.IronOcr
 
         }
 
-        private static Result<SalesInvoice> ToSalesInvoice(OcrResult.Line[] lines)
+        private Result<SalesInvoice> ToSalesInvoice(OcrResult.Line[] lines)
         {
-            var totalSumParser = new SalesInvoiceTotalSumParser(lines);
             var linesParser = new SalesInvoiceLinesParser(lines);
             
-            var invoiceTotalSum = totalSumParser.FindTotalSum();
+            var invoiceTotalSum = invoiceTotal.Find(lines);
             var salesInvoiceLines = linesParser.FindLines();
             if (!salesInvoiceLines.Any() || !invoiceTotalSum.HasValue)
             {

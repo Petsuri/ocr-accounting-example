@@ -15,7 +15,9 @@ namespace SalesInvoiceToAccountingImport
         private static async Task Execute()
         {
             var test = File.ReadAllBytes("./TestData/example-sales-invoice1.pdf");
-            var invoiceReader = new IronOcrSalesInvoiceReader(new IronOcr.IronTesseract());
+            var invoiceReader = new IronOcrSalesInvoiceReader(
+                new IronOcr.IronTesseract(), 
+                new SalesInvoiceTotalSum(new IInvoiceTotalSum[] { new SameLineInvoiceTotalSum(), new SameHeightInvoiceTotalSum() });
             await invoiceReader.ReadPdf(test);
             Console.WriteLine("Hello World!");
         }
