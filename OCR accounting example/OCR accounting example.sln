@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Builders", "Builders\Builde
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1751B1E5-0220-419D-9472-9BD6280BEF59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accouting.Tests", "Accouting.Tests\Accouting.Tests.csproj", "{503EC04F-34E6-4328-91C9-4B6810F901B3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accounting.Tests", "Accounting.Tests\Accounting.Tests.csproj", "{503EC04F-34E6-4328-91C9-4B6810F901B3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountingEntryImport.CsvHelper", "AccountingEntryImport.CsvHelper\AccountingEntryImport.CsvHelper.csproj", "{F9F4FFF0-3A54-4F6E-B46B-A20F2BD9E49C}"
 EndProject
