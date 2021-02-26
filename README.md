@@ -3,12 +3,12 @@
 ## Prerequisites
 You need to install following software to being able to build and run this example:
 - Visual Studio: https://visualstudio.microsoft.com/downloads/
- - Install with:
-  - .NET Core cross-platform development
+  - Install with:
+    - .NET Core cross-platform development
 - .NET 5 SDK: https://dotnet.microsoft.com/download/dotnet/5.0
 - Docker
- - Windows: https://docs.docker.com/docker-for-windows/install/
- - Mac: https://docs.docker.com/docker-for-mac/install/
+  - Windows: https://docs.docker.com/docker-for-windows/install/
+  - Mac: https://docs.docker.com/docker-for-mac/install/
 
 ## IronOcr
 IronOcr offers free version for development purposes only. This creates a restriction that app can only be debugged if license key is not added. Because of this, this example with SalesInvoiceImport.IronOcr implementation can only be debugged in Visual Studio. This same also applies for running tests for SalesInvoiceImport.IronOcr.Tests.
