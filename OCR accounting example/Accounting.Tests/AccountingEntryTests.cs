@@ -14,6 +14,7 @@ namespace Accounting.Tests
             var debit = new DebitBuilder().WithNetSum(10).WithVat(10).Build();
             var sut = new AccountingEntryBuilder().WithLine(credit).WithLine(debit);
 
+            Assert.IsFalse(AccountingEntry.IsValid(new AccountingEntryLine[] { credit, debit }));
             Assert.Throws<ArgumentException>(() => sut.Build());
         }
 

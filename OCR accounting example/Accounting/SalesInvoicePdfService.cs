@@ -24,11 +24,16 @@ namespace Accounting
             }
 
             var accountingEntry = ToAccounting(invoiceResult.Value);
-            var formatted = formatter.Format(accountingEntry);
+            if (!accountingEntry.IsOk)
+            {
+                return Result<string>.Failure(accountingEntry.Error);
+            }
+
+            var formatted = formatter.Format(accountingEntry.Value);
             return Result<string>.Ok(formatted);
         }
 
-        private static AccountingEntry ToAccounting(SalesInvoice invoice)
+        private static Result<AccountingEntry> ToAccounting(SalesInvoice invoice)
         {
             var debit = new Debit(new(1700), new ProductName("Counter transaction"), invoice.InvoiceTotal, null, VatType.Undefined);
             List<AccountingEntryLine> accountingLines = invoice.Lines
@@ -36,7 +41,12 @@ namespace Accounting
                 .ToList();
             accountingLines.Add(debit);
 
-            return new(accountingLines);
+            if (AccountingEntry.IsValid(accountingLines))
+            {
+                return Result<AccountingEntry>.Ok(new(accountingLines));
+            }
+
+            return Result<AccountingEntry>.Failure($"Can't create accounting entry when lines total sum is {AccountingEntry.GetTotalSum(accountingLines)}");
         }
 
         private static AccountingEntryLine ToCredit(SalesInvoiceLine line)

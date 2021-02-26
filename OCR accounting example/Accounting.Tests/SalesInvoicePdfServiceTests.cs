@@ -1,5 +1,4 @@
-﻿using Accounting;
-using Builders;
+﻿using Builders;
 using NSubstitute;
 using NUnit.Framework;
 using System;
@@ -7,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Accouting.Tests
+namespace Accounting.Tests
 {
     class SalesInvoicePdfServiceTests
     {
@@ -25,7 +24,7 @@ namespace Accouting.Tests
         }
 
         [Test]
-        public async Task Importing_WithReadingPdfSuccessfully_CreatesCorrectPdfEntry()
+        public async Task Importing_WithReadingPdfSuccessfully_CreatesCorrectAccountingEntry()
         {
             var invoice = new SalesInvoiceBuilder()
                 .WithInvoiceTotal(124m)
@@ -46,6 +45,25 @@ namespace Accouting.Tests
             format.Received(1).Format(Arg.Is<AccountingEntry>(value =>
                 value.GetLines().SequenceEqual(expected)
             ));
+        }
+
+
+        [Test]
+        public async Task Importing_WithReadingInvoiceNotHavingSameTotalAndLineSums_ReturnsError()
+        {
+            var invoice = new SalesInvoiceBuilder()
+                .WithInvoiceTotal(24m)
+                .WithLine(new SalesInvoiceLineBuilder().WithName("petri.works").WithAmount(1).WithUnitNetPrice(100m).WithVatPercentage(24));
+            var format = new AccountingEntryFormatStubBuilder().Build();
+            var sut = new SalesInvoicePdfServiceBuilder()
+                .WithReader(new SalesInvoiceReaderStubBuilder().WithReadPdfOk(invoice).Build())
+                .WithFormat(format)
+                .Build();
+
+            var actual = await sut.ToImportFormat(Array.Empty<byte>());
+
+            Assert.IsFalse(actual.IsOk);
+            Assert.AreEqual("Can't create accounting entry when lines total sum is -100,00", actual.Error);
         }
 
         [Test]

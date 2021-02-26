@@ -12,15 +12,23 @@ namespace Accounting
 
         public AccountingEntry(IEnumerable<AccountingEntryLine> lines)
         {
-            var listOfLines = lines.ToList();
-            var totalSum = listOfLines.Sum(line => line.GrossSum());
-            if (totalSum != decimal.Zero)
+            if (!IsValid(lines))
             {
-                throw new ArgumentException($"Sum of accounting entry lines must be zero. Sum was: {totalSum}", nameof(lines));
+                throw new ArgumentException($"Sum of accounting entry lines must be zero. Sum was: {GetTotalSum(lines)}", nameof(lines));
             }
             
 
-            this.lines = listOfLines;
+            this.lines = lines.ToList();
+        }
+
+        public static bool IsValid(IEnumerable<AccountingEntryLine> lines)
+        {
+            return GetTotalSum(lines) == decimal.Zero;
+        }
+
+        public static decimal GetTotalSum(IEnumerable<AccountingEntryLine> lines)
+        {
+            return lines.Sum(line => line.GrossSum());
         }
 
         public IReadOnlyList<AccountingEntryLine> GetLines()
